@@ -21,6 +21,16 @@
 		<module>library</module>
 		<module>application</module>
 	</modules>
+	<scm>
+		<url>ssh://git@gitlab.formation.org:23/dthibau/multi-module.git</url>
+		<connection>
+            scm:git:ssh://git@gitlab.formation.org:23/dthibau/multi-module.git
+        </connection>
+		<developerConnection>
+            scm:git:ssh://git@gitlab.formation.org:23/dthibau/multi-module.git
+        </developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
