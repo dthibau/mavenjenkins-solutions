@@ -1,0 +1,16 @@
+git config --global user.name 'David Thibau'
+git config --global user.email 'david.thibau@gmail.com'
+
+# Clone slides et TPs
+git clone https://github.com/dthibau/mavenjenkins.git
+
+
+# Initialisation d'un dépôt Git
+Unzip weather-project
+
+cd weather-project
+git init
+git add .
+git commit -m 'Initial commit'
+
+gitk --all &
