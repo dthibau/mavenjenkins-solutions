@@ -1,0 +1,31 @@
+<settings>
+	<localRepository>/home/dthibau/Formations/MavenJenkins/MyWork/repo</localRepository>
+
+	<pluginGroups>
+		<pluginGroup>fr.jcgay.maven.plugins</pluginGroup>
+		<!-- pluginGroup>org.sonarsource.scanner.maven</pluginGroup -->
+	</pluginGroups>
+
+  <servers>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+    <server>
+      <id>nexus-releases</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+  </servers>
+
+
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://localhost:8081/repository/maven-public/</url>
+    </mirror>
+  </mirrors>
+  
+</settings>
