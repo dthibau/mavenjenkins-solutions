@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    show-sql: false
+    
+appli:
+  secretKey: secret
+  validity: 1000
+  rememberMe: 1000
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+        
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        prod
+
+  datasource:
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/products
+    username: postgres
+       
+  jpa:
+    hibernate:
+      ddl-auto: update
