@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.formation</groupId>
 	<artifactId>multi-module</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -28,7 +28,7 @@
 		<developerConnection>
             scm:git:ssh://git@gitlab.formation.org/dthibau/multi-module.git
         </developerConnection>
-		<tag>multi-module-0.0.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
 		<dependency>
