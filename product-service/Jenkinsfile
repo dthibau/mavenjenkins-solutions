@@ -1,11 +1,12 @@
 
 pipeline {
-  agent any
+  agent none
  tools {
   jdk 'JDK17'
 }
  stages {
     stage('Unit') {
+      agent any
       steps {
 	// Build application
         echo 'Unit Test en packaging'
@@ -28,11 +29,12 @@ pipeline {
     stage('Parallel Stage') {
 
       parallel {
-        stage('Integration tests') {
+        stage('Dependency check') {
           agent any
           steps {  
-            echo 'Test intégration'
+            sh './mvnw verify -Dmaven.test.skip=true'
             // sh "./mvnw -Pintegration integration-test"
+            archiveArtifacts artifacts: 'target/dependency-check-report.html'
           }
         }
         stage('Qualité') {
