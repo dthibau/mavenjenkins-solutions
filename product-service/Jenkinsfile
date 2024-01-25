@@ -50,10 +50,17 @@ pipeline {
       }
     }
     stage("Quality Gate") {
+      agent any
       steps {
-	  // attendre le résultat de l'analyse 
-    echo 'Watch quality gate'       
+        sleep time: 1, unit: 'MINUTES'
+	      timeout(time: 1, unit: 'MINUTES') {
+          withSonarQubeEnv('SonarLocal') {
+            // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+            // true = set pipeline to UNSTABLE, false = don't
+            waitForQualityGate abortPipeline: true
+         }
        }
+      }
     }
     stage("Nexus snapshot-deployement") {
       steps {
