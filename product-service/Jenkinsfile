@@ -32,7 +32,7 @@ pipeline {
         stage('Dependency check') {
           agent any
           steps {  
-            sh './mvnw verify -Dmaven.test.skip=true'
+            sh './mvnw -POWASP verify -Dmaven.test.skip=true'
             // sh "./mvnw -Pintegration integration-test"
             archiveArtifacts artifacts: 'target/dependency-check-report.html'
           }
@@ -52,7 +52,7 @@ pipeline {
     stage("Quality Gate") {
       agent any
       steps {
-        sleep time: 1, unit: 'MINUTES'
+        sleep time: 30, unit: 'SECONDS'
 	      timeout(time: 1, unit: 'MINUTES') {
           withSonarQubeEnv('SonarLocal') {
             // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
@@ -63,9 +63,14 @@ pipeline {
       }
     }
     stage("Nexus snapshot-deployement") {
+      agent any
+      environment {
+        MY_SECRET = credentials('NEXUS_SETTINGS')
+      }
       steps {
           // Déploiement Nexus
         echo 'Déploiement snapshot'
+        sh './mvnw -s $MY_SECRET -Pprod -Dmaven.test.skip=true deploy'
        }
     }
     stage('Validation métier') {
