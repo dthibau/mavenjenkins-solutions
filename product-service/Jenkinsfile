@@ -1,0 +1,64 @@
+
+pipeline {
+  agent any
+
+ stages {
+    stage('Unit') {
+      steps {
+	// Build application
+
+        echo 'Unit Test en packaging'
+      }
+    }
+    
+    
+    stage('Parallel Stage') {
+
+      parallel {
+        stage('Integration tests') {
+          agent any
+          steps {  
+            echo 'Test intégration'
+            // sh "./mvnw -Pintegration integration-test"
+          }
+        }
+        stage('Qualité') {
+          agent any
+          steps {  
+            // Start an analysis
+            echo 'Qualité '
+          }
+        }
+      }
+    }
+    stage("Quality Gate") {
+      steps {
+	  // attendre le résultat de l'analyse 
+    echo 'Watch quality gate'       
+       }
+    }
+    stage("Nexus snapshot-deployement") {
+      steps {
+          // Déploiement Nexus
+        echo 'Déploiement snapshot'
+       }
+    }
+    stage('Validation métier') {
+/* Execution seulement sur master */
+      agent none     
+       input {
+          message "Déploiement en prod ?"
+          ok "Oui "
+          parameters {
+            string(name: 'DATA_CENTER', defaultValue: 'Paris', description: 'Data Center où déployer')
+          }
+        }
+      steps {
+	// Faire une release
+        echo 'Validation métier'
+      }
+    }
+
+ }           
+}
+ 
