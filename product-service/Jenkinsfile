@@ -1,13 +1,26 @@
 
 pipeline {
   agent any
-
+ tools {
+  jdk 'JDK17'
+}
  stages {
     stage('Unit') {
       steps {
 	// Build application
-
         echo 'Unit Test en packaging'
+        sh './mvnw -Pprod -Dmaven.test.failure.ignore=true clean package'
+      }
+      post {
+        always {
+          junit 'target/surefire-reports/*.xml'
+        }
+        success {
+          stash includes: 'target/*.jar', name: 'app'
+        }
+        unsuccessful {
+          mail bcc: '', body: '', cc: '', from: '', replyTo: '', subject: 'Build failure', to: 'david.thibau@gmail.com'
+        }
       }
     }
     
