@@ -42,6 +42,9 @@ pipeline {
           steps {  
             // Start an analysis
             echo 'Qualité '
+            withSonarQubeEnv('SonarLocal') {
+                sh './mvnw clean verify sonar:sonar'
+            }
           }
         }
       }
