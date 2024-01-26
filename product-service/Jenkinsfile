@@ -1,12 +1,15 @@
 
 pipeline {
   agent none
- tools {
-  jdk 'JDK17'
-}
+
  stages {
     stage('Package') {
-      agent any
+      agent {
+        docker {
+          image 'openjdk:17-alpine'
+          args '-v ${HOME}/.m2:/root/.m2'
+        }
+      }
       steps {
 	// Build application
         echo 'Unit Test en packaging'
@@ -30,6 +33,9 @@ pipeline {
 
       parallel {
         stage('Dependency check') {
+          tools {
+            jdk 'JDK17'
+          }
           agent any
           steps {  
             sh './mvnw -POWASP verify -Dmaven.test.skip=true'
@@ -38,6 +44,9 @@ pipeline {
           }
         }
         stage('Qualité') {
+          tools {
+            jdk 'JDK17'
+          }
           agent any
           steps {  
             // Start an analysis
@@ -51,6 +60,9 @@ pipeline {
     }
     stage("Quality Gate") {
       agent any
+      tools {
+        jdk 'JDK17'
+      }
       steps {
         sleep 30
 	      timeout(time: 1, unit: 'MINUTES') {
@@ -63,6 +75,9 @@ pipeline {
       }
     }
     stage("Nexus snapshot-deployement") {
+      tools {
+        jdk 'JDK17'
+      }
       agent any
       environment {
         MY_SECRET = credentials('NEXUS_SETTINGS')
