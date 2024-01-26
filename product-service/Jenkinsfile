@@ -74,6 +74,21 @@ pipeline {
        }
       }
     }
+    stage ("Push vers dockerhub") {
+      agent any
+
+      steps {
+        unstash 'app'
+        sh 'mv target/product-service.jar product-service.jar'
+        script {
+          def dockerImage = docker.build('dthibau/jenkins-product-service', '.')
+
+          docker.withRegistry('https://registry.hub.docker.com', 'dthibau_docker') {
+            dockerImage.push "${BRANCH_NAME}"
+          }
+        }
+      }
+    }
     stage("Nexus snapshot-deployement") {
       tools {
         jdk 'JDK17'
