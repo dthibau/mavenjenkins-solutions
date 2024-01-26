@@ -5,7 +5,7 @@ pipeline {
   jdk 'JDK17'
 }
  stages {
-    stage('Unit') {
+    stage('Package') {
       agent any
       steps {
 	// Build application
@@ -17,7 +17,7 @@ pipeline {
           junit 'target/surefire-reports/*.xml'
         }
         success {
-          stash includes: 'target/*.jar', name: 'app'
+          stash includes: 'target/product-service.jar', name: 'app'
         }
         unsuccessful {
           mail bcc: '', body: '', cc: '', from: '', replyTo: '', subject: 'Build failure', to: 'david.thibau@gmail.com'
@@ -52,7 +52,7 @@ pipeline {
     stage("Quality Gate") {
       agent any
       steps {
-        sleep time: 30, unit: 'SECONDS'
+        sleep 30
 	      timeout(time: 1, unit: 'MINUTES') {
           withSonarQubeEnv('SonarLocal') {
             // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
@@ -75,17 +75,20 @@ pipeline {
     }
     stage('Validation métier') {
 /* Execution seulement sur master */
-      agent none     
-       input {
-          message "Déploiement en prod ?"
-          ok "Oui "
-          parameters {
-            string(name: 'DATA_CENTER', defaultValue: 'Paris', description: 'Data Center où déployer')
-          }
+      agent any     
+      input {
+        message 'Vers quel datacenter voulez-vous déployer ?'
+        ok 'Déployer'
+        parameters {
+          choice choices: ['Paris', 'Nancy', 'Strasbourg'], name: 'datacenter'
         }
+      }
+
       steps {
 	// Faire une release
         echo 'Validation métier'
+        unstash 'app'
+        sh "cp target/product-service.jar /home/dthibau/Formations/MavenJenkins/MyWork/Serveur/${datacenter}.jar"
       }
     }
 
