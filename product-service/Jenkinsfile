@@ -76,6 +76,10 @@ pipeline {
     stage('Validation métier') {
 /* Execution seulement sur master */
       agent any     
+      when {
+        branch 'main'
+        beforeInput true
+      }
       input {
         message 'Vers quel datacenter voulez-vous déployer ?'
         ok 'Déployer'
